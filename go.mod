@@ -1,3 +1,3 @@
-module git.nimi24.com/erply-api/identity-wrapper
+module gitlab.com/erply/identity-wrapper
 
 go 1.12

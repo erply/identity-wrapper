@@ -1,6 +1,13 @@
 # Identity Wrapper
-Identity Wrapper is a GO component to provide Identity endpoints for other services.
-For example to get, revoke and verify JWT. Also possible to login with credentials etc.
+Identity Wrapper is a GO component to provide ERPLY Identity Service endpoints for other GO projects.
+
+For example: 
+* login with credentials
+* launch apps
+* get JWT
+* revoke JWT 
+* verify JWT.
+* etc. 
 
 ### Requirements
 * go 1.12+
@@ -11,28 +18,44 @@ For example to get, revoke and verify JWT. Also possible to login with credentia
 
 ```Go
 import (
-	"git.nimi24.com/erply-api/identity-wrapper/Identity"
+	"gitlab.com/erply/identity-wrapper/Identity"
 )
 ```
 
 ### Setup and init Identity API
+
+##### Production Env
+* __host__ is `https://id-api.erply.com/`
+* __apiWorkers__ - Default value `1`
+* __maxIdleConnections__ - Default value `1`
+* __maxConnections__ - Default value `1`
+
+##### Sandbox Env  
+Identity __Host__ is `https://id-api-sb.erply.com/`
+* __apiWorkers__ - Default value `1`
+* __maxIdleConnections__ - Default value `1`
+* __maxConnections__ - Default value `1`
+
 ```Go
+
 identityAPI := Identity.SetupAPI("http://localhost/identity/api/", 1, 1, 1)
+
 identityAPI.Init()
+
 ```
 
 ### LoginWithCredentials()
-Login to Identity Launchpad with email and password to get JWT. 
+Login to Identity Launchpad with email and password to get JWT. Launchpad JWT is in
+limited permissions. Check permissions from here https://jwt.io
 
 ```Go
 
-login, err := identityAPI.LoginWithCredentials("john.toe@example.com", "Test12345")
+login, err := identityAPI.LoginWithCredentials("john.toe@example.com", "ExamplePass12")
 
 jwt := login.Result.JWT
 companyID := login.Result.DefaultCompanyId
 
-// If default company isn't setted. Then you have to do GetUserConfirmedCompanies() 
-// request.
+// For other companies IDs you will get if you use func GetUserConfirmedCompanies()
 
 ```
 
@@ -45,8 +68,8 @@ apps, err := identityAPI.GetApplications(jwt)
 ```
 
 ### GetAccountAccess()
-Get application IDs to see where account has access. Also, returns company based 
-AccountID to launch app.
+Get list of applications IDs where user account has access. Also, returns company based 
+AccountID to launch apps.
 ```Go
 
 access, err := identityAPI.GetAccountAccess(jwt, companyID)
@@ -63,7 +86,7 @@ companies, err := identityAPI.GetUserConfirmedCompanies(jwt)
 ```
 
 ### LaunchApp()
-Use JWT and AccountID to launch app and get launchCode.
+Use JWT and and your selected AccountID to launch app and get launchCode.
 ```Go
 
 launch, err := identityAPI.LaunchApp(jwt, accountID)
