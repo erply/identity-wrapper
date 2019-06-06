@@ -121,6 +121,13 @@ FALSE if expired or not exist.
 verify, err := identityAPI.VerifyJWT(jwt)
 	
 ```
+
+## Use public key to verify JWT
+##### Production Env
+`https://apps.erply.com/jwt/pubkey.pem`
+
+##### Sandbox Env 
+`https://apps-sb.erply.com/jwt/pubkey.pem`
     
 ### Author
 * Siim Roostalu - siim.roostalu@erply.com
