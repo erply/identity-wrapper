@@ -9,14 +9,14 @@ For example to get, revoke and verify JWT. Also possible to login with credentia
 
 ### Import package
 
-```GO
+```Go
 import (
 	"git.nimi24.com/erply-api/identity-wrapper/Identity"
 )
 ```
 
 ### Setup and init Identity API
-```GO
+```Go
 identityAPI := Identity.SetupAPI("http://localhost/identity/api/", 1, 1, 1)
 identityAPI.Init()
 ```
@@ -24,7 +24,7 @@ identityAPI.Init()
 ### LoginWithCredentials()
 Login to Identity Launchpad with email and password to get JWT. 
 
-```GO
+```Go
 
 login, err := identityAPI.LoginWithCredentials("john.toe@example.com", "Test12345")
 
@@ -38,7 +38,7 @@ companyID := login.Result.DefaultCompanyId
 
 ### GetApplications()
 Get list of all applications.
-```GO
+```Go
 
 apps, err := identityAPI.GetApplications(jwt)
 	
@@ -47,7 +47,7 @@ apps, err := identityAPI.GetApplications(jwt)
 ### GetAccountAccess()
 Get application IDs to see where account has access. Also, returns company based 
 AccountID to launch app.
-```GO
+```Go
 
 access, err := identityAPI.GetAccountAccess(jwt, companyID)
 accountID := access.Result.AccountID
@@ -56,7 +56,7 @@ accountID := access.Result.AccountID
 
 ### GetUserConfirmedCompanies()
 Get list of companies where user has access.
-```GO
+```Go
 
 companies, err := identityAPI.GetUserConfirmedCompanies(jwt)
 	
@@ -64,7 +64,7 @@ companies, err := identityAPI.GetUserConfirmedCompanies(jwt)
 
 ### LaunchApp()
 Use JWT and AccountID to launch app and get launchCode.
-```GO
+```Go
 
 launch, err := identityAPI.LaunchApp(jwt, accountID)
 launchCode := launch.Result.LaunchCode
@@ -74,7 +74,7 @@ launchCode := launch.Result.LaunchCode
 ### GetJWT()
 Get JWT by launchCode. LunchCode is a hash which expires after 30 sec.
 Returns JWT with all permissions you have. JWT lives in 24 hours.
-```GO
+```Go
 
 getJWT, err := identityAPI.GetJWT(launchCode)
 appJWT := getJWT.Result.JWT
@@ -84,7 +84,7 @@ appJWT := getJWT.Result.JWT
 ### RevokeJWT()
 It revokes persistence token which makes token unusable. Persistence token is 
 inside of JWT.
-```GO
+```Go
 
 revoke, err := identityAPI.RevokeJWT(jwt)
 	
@@ -93,7 +93,7 @@ revoke, err := identityAPI.RevokeJWT(jwt)
 ### VerifyJWT()
 Verify persistence token by sending JWT. Returns (boolean) TRUE if it's valid and 
 FALSE if expired or not exist.
-```GO
+```Go
 
 verify, err := identityAPI.VerifyJWT(jwt)
 	
