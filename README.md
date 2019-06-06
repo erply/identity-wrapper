@@ -31,14 +31,14 @@ import (
 * __maxConnections__ - Default value `1`
 
 ##### Sandbox Env  
-Identity __Host__ is `https://id-api-sb.erply.com/`
+* __host__ is `https://id-api-sb.erply.com/`
 * __apiWorkers__ - Default value `1`
 * __maxIdleConnections__ - Default value `1`
 * __maxConnections__ - Default value `1`
 
 ```Go
 
-identityAPI := Identity.SetupAPI("http://localhost/identity/api/", 1, 1, 1)
+identityAPI := Identity.SetupAPI(host, apiWorkers, maxIdleConnections, maxConnections)
 
 identityAPI.Init()
 
@@ -127,5 +127,8 @@ verify, err := identityAPI.VerifyJWT(jwt)
 
 ### Changelog
 
+##### 1.0.0
+* __[IS-19]__ Updated documentation and ready to use.
+
 ##### 0.1.0
-* __[Feature]__ Initial implementation
+* __[IS-19]__ Initial implementation.
