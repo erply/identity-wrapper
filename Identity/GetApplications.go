@@ -1,10 +1,11 @@
-package Identity
+package identity
 
 import (
 	"encoding/json"
 	"net/url"
 )
 
+//GetApplicationsResponse ...
 type GetApplicationsResponse struct {
 	Result struct {
 		Applications []Application `json:"applications"`
@@ -15,6 +16,7 @@ type GetApplicationsResponse struct {
 	} `json:"error"`
 }
 
+//Application ...
 type Application struct {
 	ID               int    `json:"id"`
 	Name             string `json:"name"`
@@ -25,8 +27,10 @@ type Application struct {
 	AppStoreDisabled int    `json:"app_store_disabled"`
 }
 
-// Get list of all applications.
-func (a *API) GetApplications(jwt string) (GetApplicationsResponse, error) {
+//GetApplications Gets list of all applications.
+func (a *API) GetApplications(jwt string) (*GetApplicationsResponse, error) {
+
+	apiResponse := &GetApplicationsResponse{}
 
 	params := &url.Values{}
 	params.Set("api[jwt]", jwt)
@@ -34,14 +38,13 @@ func (a *API) GetApplications(jwt string) (GetApplicationsResponse, error) {
 	resp, err := a.postRequest(params, "V1/Launchpad/applications")
 
 	if err != nil {
-		return GetApplicationsResponse{}, err
+		return nil, err
 	}
 
-	var apiResponse = GetApplicationsResponse{}
 	err = json.Unmarshal([]byte(resp), &apiResponse)
 
 	if err != nil {
-		return GetApplicationsResponse{}, err
+		return nil, err
 	}
 
 	return apiResponse, nil

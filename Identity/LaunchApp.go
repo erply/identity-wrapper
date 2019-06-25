@@ -1,4 +1,4 @@
-package Identity
+package identity
 
 import (
 	"encoding/json"
@@ -6,6 +6,7 @@ import (
 	"strconv"
 )
 
+//LaunchAppResponse ...
 type LaunchAppResponse struct {
 	Result struct {
 		LaunchCode string `json:"launchCode"`
@@ -16,8 +17,10 @@ type LaunchAppResponse struct {
 	} `json:"error"`
 }
 
-// Use JWT and AccountID to launch app and get launch code.
-func (a *API) LaunchApp(jwt string, accountID int) (LaunchAppResponse, error) {
+//LaunchApp uses JWT and AccountID to launch app and get launch code.
+func (a *API) LaunchApp(jwt string, accountID int) (*LaunchAppResponse, error) {
+
+	var apiResponse = &LaunchAppResponse{}
 
 	params := &url.Values{}
 	params.Set("api[jwt]", jwt)
@@ -26,14 +29,13 @@ func (a *API) LaunchApp(jwt string, accountID int) (LaunchAppResponse, error) {
 	resp, err := a.postRequest(params, "V1/Launchpad/launch")
 
 	if err != nil {
-		return LaunchAppResponse{}, err
+		return nil, err
 	}
 
-	var apiResponse = LaunchAppResponse{}
 	err = json.Unmarshal([]byte(resp), &apiResponse)
 
 	if err != nil {
-		return LaunchAppResponse{}, err
+		return nil, err
 	}
 
 	return apiResponse, nil

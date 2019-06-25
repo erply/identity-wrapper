@@ -1,4 +1,4 @@
-package Identity
+package identity
 
 import (
 	"encoding/json"
@@ -6,9 +6,10 @@ import (
 	"net/url"
 )
 
+//LoginWithCredentialsResponse ...
 type LoginWithCredentialsResponse struct {
 	Result struct {
-		DefaultCompanyId int    `json:"defaultCompanyId"`
+		DefaultCompanyID int    `json:"defaultCompanyId"`
 		IsNewUser        bool   `json:"isNewUser"`
 		JWT              string `json:"jwt"`
 	} `json:"result"`
@@ -18,11 +19,13 @@ type LoginWithCredentialsResponse struct {
 	} `json:"error"`
 }
 
-// Login to Identity Launchpad with email and password.
+// LoginWithCredentials Logins to Identity Launchpad with email and password.
 // Successfully logged in user will get JWT and default company ID to use it in further requests.
 // With this JWT is possible to do requests in limited permissions.
 // Use https://jwt.io to see inside your JWT. Use algorithm RS256.
-func (a *API) LoginWithCredentials(email string, password string) (LoginWithCredentialsResponse, error) {
+func (a *API) LoginWithCredentials(email string, password string) (*LoginWithCredentialsResponse, error) {
+
+	apiResponse := &LoginWithCredentialsResponse{}
 
 	params := &url.Values{}
 	params.Set("parameters[email]", email)
@@ -31,15 +34,12 @@ func (a *API) LoginWithCredentials(email string, password string) (LoginWithCred
 	resp, err := a.postRequest(params, "V1/Launchpad/login")
 
 	if err != nil {
-		return LoginWithCredentialsResponse{}, err
+		return nil, err
 	}
 
-	var apiResponse = LoginWithCredentialsResponse{}
-	err = json.Unmarshal([]byte(resp), &apiResponse)
-
-	if err != nil {
+	if err = json.Unmarshal([]byte(resp), &apiResponse); err != nil {
 		log.Println("Login with credentials unmarshal failed", err)
-		return LoginWithCredentialsResponse{}, err
+		return nil, err
 	}
 
 	return apiResponse, nil

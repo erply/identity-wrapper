@@ -1,10 +1,11 @@
-package Identity
+package identity
 
 import (
 	"encoding/json"
 	"net/url"
 )
 
+//GetUserConfirmedCompaniesResponse ...
 type GetUserConfirmedCompaniesResponse struct {
 	Result struct {
 		Companies []Company `json:"companies"`
@@ -15,6 +16,7 @@ type GetUserConfirmedCompaniesResponse struct {
 	} `json:"error"`
 }
 
+//Company ...
 type Company struct {
 	ID        int    `json:"id"`
 	Name      string `json:"name"`
@@ -22,8 +24,10 @@ type Company struct {
 	IsDefault bool   `json:"isDefault"`
 }
 
-// Get list of companies where user has access.
-func (a *API) GetUserConfirmedCompanies(jwt string) (GetUserConfirmedCompaniesResponse, error) {
+//GetUserConfirmedCompanies Gets list of companies where user has access.
+func (a *API) GetUserConfirmedCompanies(jwt string) (*GetUserConfirmedCompaniesResponse, error) {
+
+	apiResponse := &GetUserConfirmedCompaniesResponse{}
 
 	params := &url.Values{}
 	params.Set("api[jwt]", jwt)
@@ -31,14 +35,13 @@ func (a *API) GetUserConfirmedCompanies(jwt string) (GetUserConfirmedCompaniesRe
 	resp, err := a.postRequest(params, "V1/Launchpad/getUserConfirmedCompanies")
 
 	if err != nil {
-		return GetUserConfirmedCompaniesResponse{}, err
+		return nil, err
 	}
 
-	var apiResponse = GetUserConfirmedCompaniesResponse{}
 	err = json.Unmarshal([]byte(resp), &apiResponse)
 
 	if err != nil {
-		return GetUserConfirmedCompaniesResponse{}, err
+		return nil, err
 	}
 
 	return apiResponse, nil

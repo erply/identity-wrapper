@@ -1,4 +1,4 @@
-package Identity
+package identity
 
 import (
 	"encoding/json"
@@ -6,6 +6,7 @@ import (
 	"strconv"
 )
 
+//GetAccountAccessResponse ...
 type GetAccountAccessResponse struct {
 	Result struct {
 		AccountID    int   `json:"id"`
@@ -17,9 +18,11 @@ type GetAccountAccessResponse struct {
 	} `json:"error"`
 }
 
-// Get application IDs to see where user has access.
+// GetAccountAccess gets application IDs to see where user has access.
 // Get AccountID to launch app.
-func (a *API) GetAccountAccess(jwt string, companyID int) (GetAccountAccessResponse, error) {
+func (a *API) GetAccountAccess(jwt string, companyID int) (*GetAccountAccessResponse, error) {
+
+	apiResponse := &GetAccountAccessResponse{}
 
 	params := &url.Values{}
 	params.Set("api[jwt]", jwt)
@@ -28,14 +31,11 @@ func (a *API) GetAccountAccess(jwt string, companyID int) (GetAccountAccessRespo
 	resp, err := a.postRequest(params, "V1/Launchpad/accountAccess")
 
 	if err != nil {
-		return GetAccountAccessResponse{}, err
+		return nil, err
 	}
 
-	var apiResponse = GetAccountAccessResponse{}
-	err = json.Unmarshal([]byte(resp), &apiResponse)
-
-	if err != nil {
-		return GetAccountAccessResponse{}, err
+	if err = json.Unmarshal([]byte(resp), &apiResponse); err != nil {
+		return nil, err
 	}
 
 	return apiResponse, nil

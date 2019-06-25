@@ -1,10 +1,11 @@
-package Identity
+package identity
 
 import (
 	"encoding/json"
 	"net/url"
 )
 
+//RevokeJWTResponse ...
 type RevokeJWTResponse struct {
 	Result bool `json:"result"`
 	Error  struct {
@@ -13,8 +14,10 @@ type RevokeJWTResponse struct {
 	} `json:"error"`
 }
 
-// Revoke persistence token by sending JWT.
-func (a *API) RevokeJWT(jwt string) (RevokeJWTResponse, error) {
+// RevokeJWT revokes persistence token by sending JWT.
+func (a *API) RevokeJWT(jwt string) (*RevokeJWTResponse, error) {
+
+	apiResponse := &RevokeJWTResponse{}
 
 	params := &url.Values{}
 	params.Set("api[jwt]", jwt)
@@ -22,14 +25,11 @@ func (a *API) RevokeJWT(jwt string) (RevokeJWTResponse, error) {
 	resp, err := a.postRequest(params, "V1/Launchpad/revoke")
 
 	if err != nil {
-		return RevokeJWTResponse{}, err
+		return nil, err
 	}
 
-	var apiResponse = RevokeJWTResponse{}
-	err = json.Unmarshal([]byte(resp), &apiResponse)
-
-	if err != nil {
-		return RevokeJWTResponse{}, err
+	if err = json.Unmarshal([]byte(resp), &apiResponse); err != nil {
+		return nil, err
 	}
 
 	return apiResponse, nil

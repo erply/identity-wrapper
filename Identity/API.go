@@ -1,4 +1,4 @@
-package Identity
+package identity
 
 import (
 	"bytes"
@@ -9,6 +9,7 @@ import (
 	"net/url"
 )
 
+//API ...
 type API struct {
 	IdentityAPIHost    string `json:"identity_api_host"`
 	APIWorkers         int    `json:"api_workers"`
@@ -18,6 +19,7 @@ type API struct {
 	client             *http.Client
 }
 
+//Job ...
 type Job struct {
 	RequestName string
 	Params      *url.Values
@@ -26,28 +28,27 @@ type Job struct {
 	Done        chan bool
 }
 
-func SetupAPI(IdentityAPIHost string, apiWorkers int, maxIdleConnections int, maxConnections int) *API {
+//SetupAPI ...
+func SetupAPI(IdentityAPIHost string, params ...int) *API {
 
-	if apiWorkers == 0 {
-		apiWorkers = 1
-	}
+	//apiWorkers, maxIdleConnections, maxConnections
+	parameters := [3]int{1, 1, 1}
 
-	if maxIdleConnections == 0 {
-		maxIdleConnections = 1
-	}
-
-	if maxConnections == 0 {
-		maxConnections = 1
+	for i, param := range params {
+		if param > 0 {
+			parameters[i] = param
+		}
 	}
 
 	return &API{
 		IdentityAPIHost:    IdentityAPIHost,
-		APIWorkers:         apiWorkers,
-		MaxIdleConnections: maxIdleConnections,
-		MaxConnections:     maxConnections,
+		APIWorkers:         parameters[0],
+		MaxIdleConnections: parameters[1],
+		MaxConnections:     parameters[2],
 	}
 }
 
+//Init ...
 func (a *API) Init() {
 	tr := &http.Transport{
 		MaxIdleConns:    a.MaxIdleConnections,
@@ -57,15 +58,16 @@ func (a *API) Init() {
 	a.StartWorkers()
 }
 
+//StartWorkers ...
 func (a *API) StartWorkers() {
 	a.workChannel = make(chan *Job, 512)
 
 	for i := 0; i < a.APIWorkers; i++ {
-		go a.worker(i + 1)
+		go a.worker()
 	}
 }
 
-func (a *API) worker(index int) {
+func (a *API) worker() {
 	for {
 		select {
 		case job, ok := <-a.workChannel:
@@ -97,12 +99,12 @@ func (a *API) postRequest(params *url.Values, requestName string) (string, error
 func (a *API) doJob(job *Job) (string, error) {
 
 	params := job.Params
-	endpointUrl := fmt.Sprintf("%s/%s", a.IdentityAPIHost, job.RequestName)
+	endpointURL := fmt.Sprintf("%s/%s", a.IdentityAPIHost, job.RequestName)
 
 	buffer := &bytes.Buffer{}
 	buffer.Write([]byte(params.Encode()))
 
-	resp, err := a.client.Post(endpointUrl, "application/x-www-form-urlencoded", buffer)
+	resp, err := a.client.Post(endpointURL, "application/x-www-form-urlencoded", buffer)
 
 	if err != nil {
 		log.Println("Post request failed", err.Error())
