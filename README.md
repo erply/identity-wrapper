@@ -38,18 +38,25 @@ import (
 
 ```Go
 
-//apiWorkers, maxIdleConnections and maxConnections are variadic input parameters. 
-//SetupAPI function can be called like:
-identityAPI := Identity.SetupAPI(host)
-//or
-identityAPI := Identity.SetupAPI(host, apiWorkers)
-//or
-identityAPI := Identity.SetupAPI(host, apiWorkers, maxIdleConnections)
-//or
 identityAPI := Identity.SetupAPI(host, apiWorkers, maxIdleConnections, maxConnections)
 
-//It is necessary to initialize it.
 identityAPI.Init()
+```
+
+*Note: `apiWorkers, maxIdleConnections, maxConnections` are variadic input parameters. 
+SetupAPI function can be called like:
+```Go
+//Option 1
+
+identityAPI := Identity.SetupAPI(host)	
+
+//Option 2
+
+identityAPI := Identity.SetupAPI(host, apiWorkers)	
+
+//Option 3
+
+identityAPI := Identity.SetupAPI(host, apiWorkers, maxIdleConnections)
 
 ```
 
