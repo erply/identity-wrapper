@@ -5,8 +5,10 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"net"
 	"net/http"
 	"net/url"
+	"time"
 )
 
 //API ...
@@ -51,10 +53,18 @@ func SetupAPI(IdentityAPIHost string, params ...int) *API {
 //Init ...
 func (a *API) Init() {
 	tr := &http.Transport{
-		MaxIdleConns:    a.MaxIdleConnections,
-		MaxConnsPerHost: a.MaxConnections,
+		DialContext: (&net.Dialer{
+			Timeout:   10 * time.Second,
+			KeepAlive: 10 * time.Second,
+		}).DialContext,
+		TLSHandshakeTimeout: 10 * time.Second,
+
+		ExpectContinueTimeout: 4 * time.Second,
+		ResponseHeaderTimeout: 3 * time.Second,
+		MaxIdleConns:          a.MaxIdleConnections,
+		MaxConnsPerHost:       a.MaxConnections,
 	}
-	a.client = &http.Client{Transport: tr}
+	a.client = &http.Client{Transport: tr, Timeout: time.Second * 10}
 	a.StartWorkers()
 }
 
