@@ -150,6 +150,12 @@ verify, err := identityAPI.VerifyJWT(jwt)
 
 ### Changelog
 
+##### 1.0.2
+* security update: better config for net/http
+
+##### 1.0.1
+* more pointers, optional parameters for SetupAPI func
+
 ##### 1.0.0
 * __[IS-19]__ Updated documentation and ready to use.
 
