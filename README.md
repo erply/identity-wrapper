@@ -120,6 +120,19 @@ appJWT := getJWT.Result.JWT
 	
 ```
 
+### GetSessionID()
+* GetSessionID by JWT. It returns short session token for Builder applications and 
+Service Engine endpoints.
+* Use this token in headers.
+    * `JSESSIONID` - if using Builder apps.
+    * `API_KEY` - if using Service Engine endpoints.
+
+```Go
+getSession, _ := identityAPI.GetSessionID(appJWT)
+sessionID := getSession.Result.Session
+```
+
+
 ### RevokeJWT()
 It revokes persistence token which makes token unusable. Persistence token is 
 inside of JWT.
@@ -149,6 +162,9 @@ verify, err := identityAPI.VerifyJWT(jwt)
 * Siim Roostalu - siim.roostalu@erply.com
 
 ### Changelog
+
+##### 1.1.0
+* __[IS-19]__ New endpoint getSessionID. 
 
 ##### 1.0.2
 * security update: better config for net/http
