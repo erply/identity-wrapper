@@ -1,5 +1,5 @@
 # Identity Wrapper
-Identity Wrapper is a GO component to provide ERPLY Identity Service endpoints for other GO projects.
+Identity Wrapper is a GO component which provides ERPLY Identity Service endpoints for other GO projects.
 
 For example: 
 * login with credentials
@@ -22,7 +22,7 @@ import (
 )
 ```
 
-### Setup and init Identity API
+### How to setup?
 
 ##### Production Env
 * __host__ is `https://id-api.erply.com/`
@@ -35,6 +35,11 @@ import (
 * __apiWorkers__ - Default value `1`
 * __maxIdleConnections__ - Default value `1`
 * __maxConnections__ - Default value `1`
+
+
+<details><summary>Init Identity API</summary>
+
+### Init Identity API
 
 ```Go
 
@@ -60,6 +65,10 @@ identityAPI := Identity.SetupAPI(host, apiWorkers, maxIdleConnections)
 
 ```
 
+</details>
+
+<details><summary>LoginWithCredentials()</summary>
+
 ### LoginWithCredentials()
 Login to Identity Launchpad with email and password to get JWT. Launchpad JWT is in
 limited permissions. Check permissions from here https://jwt.io
@@ -75,6 +84,10 @@ companyID := login.Result.DefaultCompanyId
 
 ```
 
+</details>
+
+<details><summary>GetApplications()</summary>
+
 ### GetApplications()
 Get list of all applications.
 ```Go
@@ -82,6 +95,10 @@ Get list of all applications.
 apps, err := identityAPI.GetApplications(jwt)
 	
 ```
+
+</details>
+
+<details><summary>GetAccountAccess()</summary>
 
 ### GetAccountAccess()
 Get list of applications IDs where user account has access. Also, returns company based 
@@ -93,6 +110,10 @@ accountID := access.Result.AccountID
 	
 ```
 
+</details>
+
+<details><summary>GetUserConfirmedCompanies()</summary>
+
 ### GetUserConfirmedCompanies()
 Get list of companies where user has access.
 ```Go
@@ -100,6 +121,10 @@ Get list of companies where user has access.
 companies, err := identityAPI.GetUserConfirmedCompanies(jwt)
 	
 ```
+
+</details>
+
+<details><summary>LaunchApp()</summary>
 
 ### LaunchApp()
 Use JWT and and your selected AccountID to launch app and get launchCode.
@@ -110,6 +135,10 @@ launchCode := launch.Result.LaunchCode
 	
 ```
 
+</details>
+
+<details><summary>GetJWT()</summary>
+
 ### GetJWT()
 Get JWT by launchCode. LunchCode is a hash which expires after 30 sec.
 Returns JWT with all permissions you have. JWT lives in 24 hours.
@@ -119,6 +148,10 @@ getJWT, err := identityAPI.GetJWT(launchCode)
 appJWT := getJWT.Result.JWT
 	
 ```
+
+</details>
+
+<details><summary>GetSessionID()</summary>
 
 ### GetSessionID()
 * GetSessionID by JWT. It returns short session token for Builder applications and 
@@ -132,6 +165,9 @@ getSession, _ := identityAPI.GetSessionID(appJWT)
 sessionID := getSession.Result.Session
 ```
 
+</details>
+
+<details><summary>RevokeJWT()</summary>
 
 ### RevokeJWT()
 It revokes persistence token which makes token unusable. Persistence token is 
@@ -142,6 +178,10 @@ revoke, err := identityAPI.RevokeJWT(jwt)
 	
 ```
 
+</details>
+
+<details><summary>VerifyJWT()</summary>
+
 ### VerifyJWT()
 Verify persistence token by sending JWT. Returns (boolean) TRUE if it's valid and 
 FALSE if expired or not exist.
@@ -150,6 +190,8 @@ FALSE if expired or not exist.
 verify, err := identityAPI.VerifyJWT(jwt)
 	
 ```
+
+</details>
 
 ## Use public key to verify JWT
 ##### Production Env
