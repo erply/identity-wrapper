@@ -18,7 +18,7 @@ For example:
 
 ```Go
 import (
-	"gitlab.com/erply/identity-wrapper/Identity"
+	"github.com/erply/identity-wrapper/Identity"
 )
 ```
 
@@ -163,17 +163,44 @@ verify, err := identityAPI.VerifyJWT(jwt)
 
 ### Changelog
 
+<details><summary>1.1.1</summary>
+
+##### 1.1.1
+* Changed module to github.com
+
+</details>
+
+<details><summary>1.1.0</summary>
+
 ##### 1.1.0
-* __[IS-19]__ New endpoint getSessionID. 
+* __[IS-19]__ New endpoint getSessionID.
+
+</details> 
+
+<details><summary>1.0.2</summary>
 
 ##### 1.0.2
 * security update: better config for net/http
 
+</details>
+
+<details><summary>1.0.1</summary>
+
 ##### 1.0.1
 * more pointers, optional parameters for SetupAPI func
+
+</details>
+
+<details><summary>1.0.0</summary>
 
 ##### 1.0.0
 * __[IS-19]__ Updated documentation and ready to use.
 
+</details>
+
+<details><summary>0.1.0</summary>
+
 ##### 0.1.0
 * __[IS-19]__ Initial implementation.
+
+</details>
