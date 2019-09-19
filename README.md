@@ -37,9 +37,11 @@ import (
 * __maxConnections__ - Default value `1`
 
 
+### How to use?
+
 <details><summary>Init Identity API</summary>
 
-### Init Identity API
+### Init
 
 ```Go
 
